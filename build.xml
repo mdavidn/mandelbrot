@@ -1,0 +1,72 @@
+<?xml version="1.0" ?>
+<project name="Mandelbrot Set" default="default">
+
+	<description>
+		Compiles the Mandelbrot Set application.
+	</description>
+
+	<!-- Directory mappings -->
+	<property name="src.dir" location="src" />
+	<property name="build.dir" location="build" />
+	<property name="build.classes.dir" location="${build.dir}/classes" />
+	<property name="dist.dir" location="dist" />
+	<property name="dist.jar" location="${dist.dir}/mandelbrot.jar" />
+	<property name="doc.dir" location="doc" />
+	<property name="javadoc.dir" location="${doc.dir}/api" />
+
+	<!-- Compile settings -->
+	<property name="build.debug" value="on" />
+	<property name="build.optimize" value="off" />
+	<property name="build.mainclass" value="edu.calstatela.mandelbrot_set.MandelbrotPanel" />
+
+	<!-- Classpath -->
+	<path id="compile.classpath">
+	</path>
+
+	<!-- Public targets -->
+
+	<target name="default" depends="dist" description="Build everything" />
+
+	<target name="docs" depends="init" description="Build documentation">
+		<javadoc author="true" destdir="${javadoc.dir}" sourcepath="${src.dir}"
+			use="true" version="true" private="true" windowtitle="C-- Compiler"
+			packagenames="edu.calstatela.mandelbrot_set">
+			<classpath refid="compile.classpath" />
+		</javadoc>
+	</target>
+
+	<target name="clean" description="Deletes all previous build artifacts">
+		<delete dir="${build.dir}" />
+		<delete dir="${build.classes.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete dir="${javadoc.dir}" />
+	</target>
+
+	<target name="dist" depends="compile" description="Create JAR">
+		<jar destfile="${dist.jar}" basedir="${build.classes.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="${build.mainclass}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<!-- Private targets -->
+
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.classes.dir}" />
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${javadoc.dir}" />
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="${src.dir}" destdir="${build.classes.dir}"
+			debug="${build.debug}" optimize="${build.optimize}">
+			<classpath refid="compile.classpath" />
+		</javac>
+		<copy todir="${build.classes.dir}">
+			<fileset dir="${src.dir}" excludes="**/*.java" />
+		</copy>
+	</target>
+
+</project>
